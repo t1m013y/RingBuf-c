@@ -1,4 +1,4 @@
-# RingBuf-c documentation
+# RingBuf-c v1.1 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
@@ -132,7 +132,7 @@ printf("%s", c);
 ```
 
 ## RingBuf_Peek()
-`int RingBuf_Peek(RingBuf* buffer_h, int index, char* data)`  
+`int RingBuf_Peek(RingBuf* buffer_h, size_t index, char* data)`  
 `buffer_h` – Pointer to the `RingBuf` structure  
 `index` – Index of the element to read  
 `data` – Pointer to a variable to save read value  

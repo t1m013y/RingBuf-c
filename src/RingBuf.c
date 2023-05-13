@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.0
+  v1.1
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -148,7 +148,7 @@ size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
   return bytes_read;
 }
 
-int RingBuf_Peek(RingBuf* buffer_h, int index, char* data)
+int RingBuf_Peek(RingBuf* buffer_h, size_t index, char* data)
 {
   if (!buffer_h->_wInit)
     return 0;
