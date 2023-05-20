@@ -33,7 +33,7 @@ RingBuf_Init(&ring_buffer, 128);  // Initialize the buffer
 **Note:** Don't initialize the buffer twice. If the buffer is already initialized, you can initialize it again only after deinitialization with `RingBuf_Deinit()`. 
 
 ## RingBuf_Deinit()
-`int RingBuf_Deinit(RingBuf* buffer_h)`
+`int RingBuf_Deinit(RingBuf* buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf` structure  
 Return value – `1` if initialization is successful, `0` otherwise
 
