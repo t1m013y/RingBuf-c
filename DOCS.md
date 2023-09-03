@@ -13,9 +13,9 @@ The ring buffer structure and typedef. Used to create the buffer and by library 
 RingBuf ring_buffer;  // Create the ring buffer structure
 ```
 
-**Important!** Don't forget to init the buffer with `RingBuf_Init()` before usage! 
+**Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! 
 
-**Note:** Don't modify or read any element of the buffer structure manually! It can break the buffer! ~~`size_t n = ring_buffer.elements_count;`~~ `size_t n = RingBuf_GetElementsCount(&ring_buffer);`
+**Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! ~~`size_t n = ring_buffer.elements_count;`~~ `size_t n = RingBuf_GetElementsCount(&ring_buffer);`
 
 ## RingBuf_Init()
 `int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size)`  

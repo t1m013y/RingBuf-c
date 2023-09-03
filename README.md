@@ -60,4 +60,4 @@ printf("%s", c);  // Will print "hello"
 
 Watch detailed info about library functions in the [documentation](#Documentation).
 
-**Note:** Don't modify or read any element of the buffer structure manually! It can break the buffer! ~~`size_t n = ring_buffer.elements_count;`~~ `size_t n = RingBuf_GetElementsCount(&ring_buffer);`
+**Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! ~~`size_t n = ring_buffer.elements_count;`~~ `size_t n = RingBuf_GetElementsCount(&ring_buffer);`
