@@ -1,4 +1,4 @@
-# RingBuf-c v1.1 documentation
+# RingBuf-c v1.2 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
@@ -23,7 +23,7 @@ RingBuf ring_buffer;  // Create the ring buffer structure
 `buffer_size` – Size of the buffer  
 Return value – `1` if init is successful, `0` otherwise
 
-Initializes the ring buffer before usage. 
+Initializes the ring buffer. If the buffer is already initialized, returns `1`. 
 
 **Example**:   
 ```c
@@ -37,7 +37,7 @@ RingBuf_Init(&ring_buffer, 128);  // Initialize the buffer
 `buffer_h` – Pointer to the `RingBuf` structure  
 Return value – `1` if initialization is successful, `0` otherwise
 
-Deinitialize the ring buffer. Use this function to free memory if you don't need the buffer anymore. If the buffer is already deinitialized, returns `0`. After deinitialization, the buffer can be initialized and used again. 
+Deinitialize the ring buffer. Use this function to free memory if you don't need the buffer anymore. If the buffer is already deinitialized, returns `1`. After deinitialization, the buffer can be initialized and used again. 
 
 **Example:**   
 ```c
@@ -92,7 +92,7 @@ RingBuf_Queue(&ring_buffer, 'a');  // Add 'a' to the buffer
 `size` – Size of a data array  
 Return value – Number of bytes have been queued
 
-Adds `size` elements from `data` to the buffer. If `data` is a null pointer, the function will add `size` elements with `0` value. 
+Adds `size` elements from `data` to the buffer. If `data` is a null pointer, `size` elements with `0` value will be added. 
 
 **Example:**   
 ```c
@@ -106,7 +106,7 @@ RingBuf_QueueArr(&ring_buffer, a, 5);  // Add "hello" to the buffer
 `data` – Pointer to a variable to save read value  
 Return value – `1` if successful, `0` otherwise
 
-Reads one (oldest) element from the buffer and removes this element. If `data` is a null pointer, the function will remove the element from the buffer but it will not be saved. 
+Reads one (oldest) element from the buffer and removes this element. If `data` is a null pointer, the element from the buffer will be removed but it will not be saved. 
 
 **Example:**   
 ```c

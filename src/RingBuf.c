@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.1
+  v1.2
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -25,14 +25,14 @@ int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size)
     buffer_h->_wInit = true;
     return 1;
   } else {
-    return 0;
+    return 1;
   }
 }
 
 int RingBuf_Deinit(RingBuf* buffer_h)
 {
   if (!buffer_h->_wInit)
-    return 0;
+    return 1;
   
   buffer_h->_wInit = false;
   
