@@ -1,4 +1,4 @@
-# RingBuf-c v1.2 documentation
+# RingBuf-c v1.3 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
@@ -15,7 +15,7 @@ RingBuf ring_buffer;  // Create the ring buffer structure
 
 **Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! 
 
-**Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! ~~`size_t n = ring_buffer.elements_count;`~~ `size_t n = RingBuf_GetElementsCount(&ring_buffer);`
+**Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! Use `RingBuf_OA` functions instead. 
 
 ## RingBuf_Init()
 `int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size)`  
@@ -192,3 +192,70 @@ if (!RingBuf_IsFull(&ring_buffer)) {  // If the buffer is not full
     RingBuf_Queue(&ring_buffer, 'a');  // Add 'a' to the buffer
 }
 ```
+
+## RingBuf_GetBufferSize()
+`size_t RingBuf_GetBufferSize(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – Ring buffer size
+
+Returns whole ring buffer size. 
+
+**Example:**   
+```c
+size_t buffer_size = RingBuf_GetBufferSize(&ring_buffer);  // Get ring buffer size
+```
+
+## RingBuf_OA_GetBufferPointer()
+`char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – pointer to the buffer
+
+Provides direct access to the buffer (e.g. for DMA access in STM32). Returns pointer to the buffer itself (to buffer array, allocated using malloc). Returns null pointer if the buffer is not initialized.   
+**Use with caution.**
+
+## RingBuf_OA_GetReadIndex()
+`size_t RingBuf_OA_GetReadIndex(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – Read (tail) index of the buffer
+
+Returns read (tail) index of the ring buffer. 
+
+## RingBuf_OA_GetWriteIndex()
+`size_t RingBuf_OA_GetWriteIndex(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – Write (head) index of the buffer
+
+Returns write (head) index of the ring buffer. 
+
+## RingBuf_OA_GetReadPointer()
+`char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – Pointer to the read (tail) element of the buffer
+
+Returns pointer to the read (tail) element of the buffer.   
+**Use with caution**
+
+## RingBuffer_OA_GetWritePointer()
+`char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – Pointer to the write (head) element of the buffer
+
+Returns pointer to the write (head) element of the buffer.   
+**Use with caution**
+
+## RingBuf_OA_ElementQueued()
+`int RingBuf_OA_ElementQueued(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – `1` if successful, `0` otherwise
+
+Makes buffer act like an element is queued, but doesn't add elements to the buffer. Useful with `RingBuffer_OA_GetWritePointer()`.   
+**Use with caution**
+
+## RingBuf_OA_ElementDequeued()
+`int RingBuf_OA_ElementDequeued(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – `1` if successful, `0` otherwise
+
+Makes buffer act like an element is dequeued, but doesn't read element. Useful with `RingBuffer_OA_GetReadPointer()`.   
+**Use with caution**
+

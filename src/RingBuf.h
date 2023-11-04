@@ -1,12 +1,12 @@
 /*
   RingBuf-c
-  v1.2
+  v1.3
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
 
-#ifndef __RingBuf_h
-#define __RingBuf_h
+#ifndef incl_RingBuf_h
+#define incl_RingBuf_h
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,9 +45,19 @@ size_t RingBuf_GetElementsCount(RingBuf* buffer_h);
 bool RingBuf_IsEmpty(RingBuf* buffer_h);
 bool RingBuf_IsFull(RingBuf* buffer_h);
 
+size_t RingBuf_GetBufferSize(RingBuf* buffer_h);
+
+char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h);
+size_t RingBuf_OA_GetReadIndex(RingBuf* buffer_h);
+size_t RingBuf_OA_GetWriteIndex(RingBuf* buffer_h);
+char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h);
+char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h);
+int RingBuf_OA_ElementQueued(RingBuf* buffer_h);
+int RingBuf_OA_ElementDequeued(RingBuf* buffer_h);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // __RingBuf_h
+#endif  // incl_RingBuf_h

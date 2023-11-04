@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.2
+  v1.3
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -185,4 +185,80 @@ bool RingBuf_IsFull(RingBuf* buffer_h)
     return (bool)0;
   
   return !(buffer_h->elements_count < buffer_h->buffer_size);
+}
+
+size_t RingBuf_GetBufferSize(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0
+  
+  return buffer_h->buffer_size;
+}
+
+char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return (char*)NULL;
+  
+  return buffer_h->buffer;
+}
+
+size_t RingBuf_OA_GetReadIndex(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  return tail_index;
+}
+
+size_t RingBuf_OA_GetWriteIndex(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  if (buffer_h->elements_count < buffer_h->buffer_size)
+    return (buffer_h->tail_index + buffer_h->elements_count) % buffer_h->buffer_size;
+  else (buffer_h->elements_count == buffer_h->buffer_size)
+    return buffer_h->tail_index;
+}
+
+char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  return (char*)(buffer_h->buffer + buffer_h->tail_index);
+}
+
+char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  if (buffer_h->elements_count < buffer_h->buffer_size)
+    return (char*)(buffer_h->buffer + (buffer_h->tail_index + buffer_h->elements_count) % buffer_h->buffer_size);
+  else
+    return (char*)(buffer_h->buffer + buffer_h->tail_index);
+}
+
+int RingBuf_OA_ElementQueued(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  if (buffer_h->elements_count < buffer_h->buffer_size) {
+    ++buffer_h->elements_count;
+    return 1;
+  } else if (buffer_h->elements_count == buffer_h->buffer_size) {
+    ++buffer_h->tail_index;
+    buffer_h->tail_index %= buffer_h->buffer_size;
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int RingBuf_OA_ElementDequeued(RingBuf* buffer_h) {
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  if (!(buffer_h->elements_count > 0))
+    return 0;
+  
+  --buffer_h->elements_count;
+  ++buffer_h->tail_index;
+  buffer_h->tail_index %= buffer_h->buffer_size;
 }
