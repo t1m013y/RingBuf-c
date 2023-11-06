@@ -1,4 +1,4 @@
-# RingBuf-c v1.3 documentation
+# RingBuf-c v1.4 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
@@ -7,6 +7,8 @@ Ring buffer is a data structure that uses a single, fixed-size buffer as if it w
 ## RingBuf
 `typedef struct RingBuf {...} RingBuf`  
 The ring buffer structure and typedef. Used to create the buffer and by library functions. Stores data about the buffer. 
+
+The buffer has locked flag. It is `true` if any process is modifying buffer at the moment. If this flag is `true`, any operation that can modify the buffer won't be started and will return `0`. Some functions ignore locked flag. 
 
 **Example:**   
 ```c
@@ -37,7 +39,8 @@ RingBuf_Init(&ring_buffer, 128);  // Initialize the buffer
 `buffer_h` – Pointer to the `RingBuf` structure  
 Return value – `1` if initialization is successful, `0` otherwise
 
-Deinitialize the ring buffer. Use this function to free memory if you don't need the buffer anymore. If the buffer is already deinitialized, returns `1`. After deinitialization, the buffer can be initialized and used again. 
+Deinitialize the ring buffer. Use this function to free memory if you don't need the buffer anymore. If the buffer is already deinitialized, returns `1`. After deinitialization, the buffer can be initialized and used again.   
+**Ignores locked flag**
 
 **Example:**   
 ```c
@@ -138,7 +141,8 @@ printf("%s", c);
 `data` – Pointer to a variable to save read value  
 Return value – `1` if successful, `0` otherwise
 
-Reads th element with the given index from the buffer, saves it to `data` but do not deletes it. The index is relative to the oldest written element. If `data` is a null pointer, data will not be saved. Returns `0` if index is out of range. 
+Reads th element with the given index from the buffer, saves it to `data` but do not deletes it. The index is relative to the oldest written element. If `data` is a null pointer, data will not be saved. Returns `0` if index is out of range.   
+**Ignores locked flag**
 
 **Example:**   
 ```c
@@ -192,6 +196,13 @@ if (!RingBuf_IsFull(&ring_buffer)) {  // If the buffer is not full
     RingBuf_Queue(&ring_buffer, 'a');  // Add 'a' to the buffer
 }
 ```
+
+## RingBuf_IsLocked()
+`bool RingBuf_IsLocked(RingBuf* buffer_h)`  
+`buffer_h` – Pointer to the `RingBuf` structure  
+Return value – `true` if the buffer is locked, `false` otherwise
+
+Checks if the buffer is locked by another process elsewhere. 
 
 ## RingBuf_GetBufferSize()
 `size_t RingBuf_GetBufferSize(RingBuf* buffer_h)`  

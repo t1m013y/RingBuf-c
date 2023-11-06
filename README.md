@@ -12,14 +12,15 @@ Demonstration of a ring buffer:
 [\(Wikipedia\)](https://en.wikipedia.org/wiki/Circular_buffer)
 
 ## Features
-* Can store `char` and `uint8_t` types
+* Can store `char` or any 8-bit type
 * Can be used with C and C++ languages
 * Easy to use
 * Custom buffer size
 * Supports data peek
 * Multiple buffers can be created
 * Can be deinitialized to free memory
-* MIT license
+* Supports direct access to the buffer (e.g. for DMA)
+* Open source MIT license
 
 ## Installation
 1. Download the repository; 

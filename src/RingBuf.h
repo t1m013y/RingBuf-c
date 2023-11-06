@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.3
+  v1.4
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -18,6 +18,7 @@ extern "C" {
 
 typedef struct RingBuf {
   bool _wInit;
+  volatile bool _isLocked;
   
   char* buffer;
   
@@ -45,6 +46,8 @@ size_t RingBuf_GetElementsCount(RingBuf* buffer_h);
 bool RingBuf_IsEmpty(RingBuf* buffer_h);
 bool RingBuf_IsFull(RingBuf* buffer_h);
 
+bool RingBuf_IsLocked(RingBuf* buffer_h);
+
 size_t RingBuf_GetBufferSize(RingBuf* buffer_h);
 
 char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h);
@@ -54,6 +57,9 @@ char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h);
 char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h);
 int RingBuf_OA_ElementQueued(RingBuf* buffer_h);
 int RingBuf_OA_ElementDequeued(RingBuf* buffer_h);
+
+int RingBuf__Lock(RingBuf* buffer_h);  // Auxiliary function, not recommended to use
+int RingBuf__Unlock(RingBuf* buffer_h);  // Auxiliary function, not recommended to use
 
 
 #ifdef __cplusplus

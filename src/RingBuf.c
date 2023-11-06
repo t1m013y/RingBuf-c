@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.3
+  v1.4
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -22,6 +22,7 @@ int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size)
     if (buffer_h->buffer == NULL)
       return 0;
     
+    buffer_h->_isLocked = false;
     buffer_h->_wInit = true;
     return 1;
   } else {
@@ -50,15 +51,20 @@ int RingBuf_Clear(RingBuf* buffer_h)
 {
   if (!buffer_h->_wInit)
     return 0;
+  if (!RingBuf__Lock(buffer_h))
+    return 0;
   
   buffer_h->elements_count = 0;
   
+  RingBuf__Unlock(buffer_h);
   return 1;
 }
 
 int RingBuf_Queue(RingBuf* buffer_h, const char data)
 {
   if (!buffer_h->_wInit)
+    return 0;
+  if (!RingBuf__Lock(buffer_h))
     return 0;
   
   if (buffer_h->elements_count < buffer_h->buffer_size) {
@@ -67,6 +73,7 @@ int RingBuf_Queue(RingBuf* buffer_h, const char data)
     *write_addr = data;
     ++buffer_h->elements_count;
     
+    RingBuf__Unlock(buffer_h);
     return 1;
   } else if (buffer_h->elements_count == buffer_h->buffer_size) {
     char* write_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
@@ -75,8 +82,10 @@ int RingBuf_Queue(RingBuf* buffer_h, const char data)
     buffer_h->tail_index %= buffer_h->buffer_size;
     *write_addr = data;
     
+    RingBuf__Unlock(buffer_h);
     return 1;
   } else {
+    RingBuf__Unlock(buffer_h);
     return 0;
   }
 }
@@ -84,6 +93,8 @@ int RingBuf_Queue(RingBuf* buffer_h, const char data)
 size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
 {
   if (!buffer_h->_wInit)
+    return 0;
+  if (!RingBuf__Lock(buffer_h))
     return 0;
   
   size_t bytes_written = 0;
@@ -101,6 +112,7 @@ size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
       break;
   }
   
+  RingBuf__Unlock(buffer_h);
   return bytes_written;
 }
 
@@ -108,8 +120,11 @@ int RingBuf_Dequeue(RingBuf* buffer_h, char* data)
 {
   if (!buffer_h->_wInit)
     return 0;
+  if (!RingBuf__Lock(buffer_h))
+    return 0;
   
   if (!(buffer_h->elements_count > 0))
+    RingBuf__Unlock(buffer_h);
     return 0;
   
   char* read_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
@@ -123,12 +138,15 @@ int RingBuf_Dequeue(RingBuf* buffer_h, char* data)
   if (data != NULL)
     *data = dequeued_byte;
   
+  RingBuf__Unlock(buffer_h);
   return 1;
 }
 
 size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
 {
   if (!buffer_h->_wInit)
+    return 0;
+  if (!RingBuf__Lock(buffer_h))
     return 0;
   
   size_t bytes_read = 0;
@@ -145,6 +163,7 @@ size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
     }
   }
   
+  RingBuf__Unlock(buffer_h);
   return bytes_read;
 }
 
@@ -187,45 +206,59 @@ bool RingBuf_IsFull(RingBuf* buffer_h)
   return !(buffer_h->elements_count < buffer_h->buffer_size);
 }
 
-size_t RingBuf_GetBufferSize(RingBuf* buffer_h) {
+bool RingBuf_IsLocked(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
-    return 0
+    return 0;
+  
+  return buffer_h->_isLocked;
+}
+
+size_t RingBuf_GetBufferSize(RingBuf* buffer_h)
+{
+  if (!buffer_h->_wInit)
+    return 0;
   
   return buffer_h->buffer_size;
 }
 
-char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h) {
+char* RingBuf_OA_GetBufferPointer(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
     return (char*)NULL;
   
   return buffer_h->buffer;
 }
 
-size_t RingBuf_OA_GetReadIndex(RingBuf* buffer_h) {
+size_t RingBuf_OA_GetReadIndex(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
     return 0;
   
-  return tail_index;
+  return buffer_h->tail_index;
 }
 
-size_t RingBuf_OA_GetWriteIndex(RingBuf* buffer_h) {
+size_t RingBuf_OA_GetWriteIndex(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
     return 0;
   
   if (buffer_h->elements_count < buffer_h->buffer_size)
     return (buffer_h->tail_index + buffer_h->elements_count) % buffer_h->buffer_size;
-  else (buffer_h->elements_count == buffer_h->buffer_size)
+  else
     return buffer_h->tail_index;
 }
 
-char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h) {
+char* RingBuf_OA_GetReadPointer(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
     return 0;
   
   return (char*)(buffer_h->buffer + buffer_h->tail_index);
 }
 
-char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h) {
+char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
     return 0;
   
@@ -235,24 +268,33 @@ char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h) {
     return (char*)(buffer_h->buffer + buffer_h->tail_index);
 }
 
-int RingBuf_OA_ElementQueued(RingBuf* buffer_h) {
+int RingBuf_OA_ElementQueued(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
+    return 0;
+  if (!RingBuf__Lock(buffer_h))
     return 0;
   
   if (buffer_h->elements_count < buffer_h->buffer_size) {
     ++buffer_h->elements_count;
+    RingBuf__Unlock(buffer_h);
     return 1;
   } else if (buffer_h->elements_count == buffer_h->buffer_size) {
     ++buffer_h->tail_index;
     buffer_h->tail_index %= buffer_h->buffer_size;
+    RingBuf__Unlock(buffer_h);
     return 1;
   } else {
+    RingBuf__Unlock(buffer_h);
     return 0;
   }
 }
 
-int RingBuf_OA_ElementDequeued(RingBuf* buffer_h) {
+int RingBuf_OA_ElementDequeued(RingBuf* buffer_h)
+{
   if (!buffer_h->_wInit)
+    return 0;
+  if (!RingBuf__Lock(buffer_h))
     return 0;
   
   if (!(buffer_h->elements_count > 0))
@@ -261,4 +303,27 @@ int RingBuf_OA_ElementDequeued(RingBuf* buffer_h) {
   --buffer_h->elements_count;
   ++buffer_h->tail_index;
   buffer_h->tail_index %= buffer_h->buffer_size;
+  
+  RingBuf__Unlock(buffer_h);
+  return 1;
+}
+
+int RingBuf__Lock(RingBuf* buffer_h)  // Auxiliary function, not recommended to use
+{
+  if (!buffer_h->_wInit)
+    return 0;
+  if (buffer_h->_isLocked)
+    return 0;
+  
+  buffer_h->_isLocked = true;
+  return 1;
+}
+
+int RingBuf__Unlock(RingBuf* buffer_h)  // Auxiliary function, not recommended to use
+{
+  if (!buffer_h->_wInit)
+    return 0;
+  
+  buffer_h->_isLocked = false;
+  return 1;
 }
