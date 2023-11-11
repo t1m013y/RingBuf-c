@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.4
+  v1.4.1
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -123,9 +123,10 @@ int RingBuf_Dequeue(RingBuf* buffer_h, char* data)
   if (!RingBuf__Lock(buffer_h))
     return 0;
   
-  if (!(buffer_h->elements_count > 0))
+  if (!(buffer_h->elements_count > 0)) {
     RingBuf__Unlock(buffer_h);
     return 0;
+  }
   
   char* read_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
   
