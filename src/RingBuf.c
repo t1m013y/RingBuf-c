@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.4
+  v1.4.1
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
