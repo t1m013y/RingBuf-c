@@ -1,4 +1,4 @@
-# RingBuf-c v1.4.1 documentation
+# RingBuf-c v1.4.2 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
@@ -15,7 +15,7 @@ The buffer has locked flag. It is `true` if any process is modifying buffer at t
 RingBuf ring_buffer;  // Create the ring buffer structure
 ```
 
-**Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! 
+**Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! Calling any function excluding `RingBuf_Init()` before buffer initialization or initialization the buffer twice without deinitialization can cause undefined behaviour on some systems. 
 
 **Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! Use `RingBuf_OA` functions instead. 
 
@@ -29,7 +29,7 @@ Initializes the ring buffer. If the buffer is already initialized, returns `1`.
 
 **Example**:   
 ```c
-RingBuf_Init(&ring_buffer, 128);  // Initialize the buffer
+while (!RingBuf_Init(&ring_buffer, 128)) {}  // Better way to init the buffer, will retry in case of error
 ```
 
 **Note:** Don't initialize the buffer twice. If the buffer is already initialized, you can initialize it again only after deinitialization with `RingBuf_Deinit()`. 
