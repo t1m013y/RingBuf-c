@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.4.2
+  v1.5
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -58,32 +58,7 @@ int RingBuf_Clear(RingBuf* buffer_h)
 
 int RingBuf_Queue(RingBuf* buffer_h, const char data)
 {
-  if (!buffer_h->_wInit)
-    return 0;
-  if (!RingBuf__Lock(buffer_h))
-    return 0;
-  
-  if (buffer_h->elements_count < buffer_h->buffer_size) {
-    char* write_addr = (char*)(buffer_h->buffer + (buffer_h->tail_index + buffer_h->elements_count) % buffer_h->buffer_size);
-    
-    *write_addr = data;
-    ++buffer_h->elements_count;
-    
-    RingBuf__Unlock(buffer_h);
-    return 1;
-  } else if (buffer_h->elements_count == buffer_h->buffer_size) {
-    char* write_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
-    
-    ++buffer_h->tail_index;
-    buffer_h->tail_index %= buffer_h->buffer_size;
-    *write_addr = data;
-    
-    RingBuf__Unlock(buffer_h);
-    return 1;
-  } else {
-    RingBuf__Unlock(buffer_h);
-    return 0;
-  }
+  return RingBuf__Queue(buffer_h, data, false);
 }
 
 size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
@@ -98,9 +73,9 @@ size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
     int r;
     
     if (data != NULL)
-      r = RingBuf_Queue(buffer_h, data[i]);
+      r = RingBuf__Queue(buffer_h, data[i], true);
     else
-      r = RingBuf_Queue(buffer_h, 0);
+      r = RingBuf__Queue(buffer_h, 0, true);
     
     if (r == 1)
       bytes_written++;
@@ -114,29 +89,7 @@ size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
 
 int RingBuf_Dequeue(RingBuf* buffer_h, char* data)
 {
-  if (!buffer_h->_wInit)
-    return 0;
-  if (!RingBuf__Lock(buffer_h))
-    return 0;
-  
-  if (!(buffer_h->elements_count > 0)) {
-    RingBuf__Unlock(buffer_h);
-    return 0;
-  }
-  
-  char* read_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
-  
-  char dequeued_byte = *read_addr;
-  
-  --buffer_h->elements_count;
-  ++buffer_h->tail_index;
-  buffer_h->tail_index %= buffer_h->buffer_size;
-  
-  if (data != NULL)
-    *data = dequeued_byte;
-  
-  RingBuf__Unlock(buffer_h);
-  return 1;
+  RingBuf__Dequeue(buffer_h, data, false);
 }
 
 size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
@@ -149,7 +102,7 @@ size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
   size_t bytes_read = 0;
   for (size_t i = 0; i < size; i++) {
     char read;
-    int r = RingBuf_Dequeue(buffer_h, &read);
+    int r = RingBuf__Dequeue(buffer_h, &read, true);
     
     if (r == 1) {
       if (data != NULL)
@@ -302,6 +255,70 @@ int RingBuf_OA_ElementDequeued(RingBuf* buffer_h)
   buffer_h->tail_index %= buffer_h->buffer_size;
   
   RingBuf__Unlock(buffer_h);
+  return 1;
+}
+
+int RingBuf__Queue(RingBuf* buffer_h, const char data, bool _ign_lock) {  // Auxiliary function, not recommended to use
+  if (!buffer_h->_wInit)
+    return 0;
+  if (!_ign_lock) {
+    if (!RingBuf__Lock(buffer_h))
+      return 0;
+  }
+  
+  if (buffer_h->elements_count < buffer_h->buffer_size) {
+    char* write_addr = (char*)(buffer_h->buffer + (buffer_h->tail_index + buffer_h->elements_count) % buffer_h->buffer_size);
+    
+    *write_addr = data;
+    ++buffer_h->elements_count;
+    
+    if (!_ign_lock)
+      RingBuf__Unlock(buffer_h);
+    return 1;
+  } else if (buffer_h->elements_count == buffer_h->buffer_size) {
+    char* write_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
+    
+    ++buffer_h->tail_index;
+    buffer_h->tail_index %= buffer_h->buffer_size;
+    *write_addr = data;
+    
+    if (!_ign_lock)
+      RingBuf__Unlock(buffer_h);
+    return 1;
+  } else {
+    if (!_ign_lock)
+      RingBuf__Unlock(buffer_h);
+    return 0;
+  }
+}
+
+int RingBuf__Dequeue(RingBuf* buffer_h, char* data, bool _ign_lock) {  // Auxiliary function, not recommended to use
+  if (!buffer_h->_wInit)
+    return 0;
+  if (!_ign_lock) {
+    if (!RingBuf__Lock(buffer_h))
+      return 0;
+  }
+  
+  if (!(buffer_h->elements_count > 0)) {
+    if (!_ign_lock)
+      RingBuf__Unlock(buffer_h);
+    return 0;
+  }
+  
+  char* read_addr = (char*)(buffer_h->buffer + buffer_h->tail_index);
+  
+  char dequeued_byte = *read_addr;
+  
+  --buffer_h->elements_count;
+  ++buffer_h->tail_index;
+  buffer_h->tail_index %= buffer_h->buffer_size;
+  
+  if (data != NULL)
+    *data = dequeued_byte;
+  
+  if (!_ign_lock)
+    RingBuf__Unlock(buffer_h);
   return 1;
 }
 

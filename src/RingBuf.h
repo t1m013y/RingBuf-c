@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.4.2
+  v1.5
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -58,6 +58,8 @@ char* RingBuffer_OA_GetWritePointer(RingBuf* buffer_h);
 int RingBuf_OA_ElementQueued(RingBuf* buffer_h);
 int RingBuf_OA_ElementDequeued(RingBuf* buffer_h);
 
+int RingBuf__Queue(RingBuf* buffer_h, const char data, bool _ign_lock);  // Auxiliary function, not recommended to use
+int RingBuf__Dequeue(RingBuf* buffer_h, char* data, bool _ign_lock);  // Auxiliary function, not recommended to use
 int RingBuf__Lock(RingBuf* buffer_h);  // Auxiliary function, not recommended to use
 int RingBuf__Unlock(RingBuf* buffer_h);  // Auxiliary function, not recommended to use
 
