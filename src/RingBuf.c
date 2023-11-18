@@ -89,7 +89,7 @@ size_t RingBuf_QueueArr(RingBuf* buffer_h, const char * data, size_t size)
 
 int RingBuf_Dequeue(RingBuf* buffer_h, char* data)
 {
-  RingBuf__Dequeue(buffer_h, data, false);
+  return RingBuf__Dequeue(buffer_h, data, false);
 }
 
 size_t RingBuf_DequeueArr(RingBuf* buffer_h, char* data, size_t size)
