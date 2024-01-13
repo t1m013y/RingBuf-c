@@ -141,7 +141,7 @@ printf("%s", c);
 `data` – Pointer to a variable to save read value  
 Return value – `1` if successful, `0` otherwise
 
-Reads th element with the given index from the buffer, saves it to `data` but do not deletes it. The index is relative to the oldest written element. If `data` is a null pointer, data will not be saved. Returns `0` if index is out of range.   
+Reads th element with the given index from the buffer, saves it to `data` but does not delete it. The index is relative to the oldest written element. If `data` is a null pointer, data will not be saved. Returns `0` if index is out of range.   
 **Ignores locked flag**
 
 **Example:**   
