@@ -1,12 +1,12 @@
 /*
   RingBuf-c
-  v1.5.2
+  v1.5.3
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
 
-#ifndef incl_RingBuf_h
-#define incl_RingBuf_h
+#ifndef INCLUDED_RingBuf_h
+#define INCLUDED_RingBuf_h
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,4 +70,4 @@ int RingBuf__Unlock(RingBuf* buffer_h);  // Auxiliary function, not recommended 
 }
 #endif
 
-#endif  // incl_RingBuf_h
+#endif  // INCLUDED_RingBuf_h

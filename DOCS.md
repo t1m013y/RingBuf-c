@@ -1,4 +1,4 @@
-# RingBuf-c v1.5 documentation
+# RingBuf-c v1.5.3 documentation
 
 A ring buffer (FIFO) for C and C++ languages. 
 
