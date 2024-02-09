@@ -25,7 +25,7 @@ RingBuf ring_buffer;  // Create the ring buffer structure
 `buffer_size` – Size of the buffer (must be greater than `0`)  
 Return value – `1` if initialization is successful, `0` otherwise
 
-Initializes the ring buffer. If the buffer is already initialized, returns `1`. 
+Initializes the ring buffer. 
 
 **Example**:   
 ```c
