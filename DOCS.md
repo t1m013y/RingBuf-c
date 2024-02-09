@@ -22,7 +22,7 @@ RingBuf ring_buffer;  // Create the ring buffer structure
 ## RingBuf_Init()
 `int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size)`  
 `buffer_h` – Pointer to the `RingBuf` structure  
-`buffer_size` – Size of the buffer  
+`buffer_size` – Size of the buffer (must be greater than `0`)  
 Return value – `1` if init is successful, `0` otherwise
 
 Initializes the ring buffer. If the buffer is already initialized, returns `1`. 
