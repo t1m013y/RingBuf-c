@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.5
+  v1.5.2
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -30,6 +30,8 @@ typedef struct RingBuf {
 
 int RingBuf_Init(RingBuf* buffer_h, size_t buffer_size);
 int RingBuf_Deinit(RingBuf* buffer_h);
+
+__attribute__((deprecated))
 bool RingBuf_IsInit(RingBuf* buffer_h);
 
 int RingBuf_Clear(RingBuf* buffer_h);

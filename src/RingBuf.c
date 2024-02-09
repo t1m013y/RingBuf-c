@@ -1,6 +1,6 @@
 /*
   RingBuf-c
-  v1.5
+  v1.5.2
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
 */
@@ -38,7 +38,7 @@ int RingBuf_Deinit(RingBuf* buffer_h)
   return 1;
 }
 
-bool RingBuf_IsInit(RingBuf* buffer_h)
+bool RingBuf_IsInit(RingBuf* buffer_h)  // DEPRECATED!
 {
   return buffer_h->_wInit;
 }
