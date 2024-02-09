@@ -50,6 +50,7 @@ RingBuf_Deinit(&ring_buffer);  // Deinitialize the buffer
 **Note:** After deinitialization, all data stored in the buffer will be lost! 
 
 ## RingBuf_IsInit()
+**Warning! Deprecated.**
 `bool RingBuf_IsInit(RingBuf* buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf` structure  
 Return value – `true` if the buffer is initialized, `false` if the buffer is not initialized
