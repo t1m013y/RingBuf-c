@@ -12,7 +12,7 @@ The buffer has locked flag. It is `true` if any process is modifying buffer at t
 
 **Example:** see [RinBuf_Init()](#RingBuf_Init)
 
-**Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! Calling any function excluding `RingBuf_Init()` before buffer initialization or initialization the buffer twice without deinitialization can cause undefined behaviour on some systems.
+**Note:** Don't forget to initialize the buffer with `RingBuf_Init()` before usage! Calling any function excluding `RingBuf_Init()` before buffer initialization or initialization the buffer twice without deinitialization can cause undefined behavior on some systems.
 
 **Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! Use `RingBuf_OA` functions instead.
 
