@@ -30,11 +30,6 @@ Demonstration of a ring buffer:
 [English \[English\]](DOCS.md)
 
 ## Usage
-Don't forget to [install](#Installation) and include the library
-```c
-#include "RingBuf.h"
-```
-
 First, create and initialize the buffer.
 ```c
 RingBuf_t ring_buffer;  // Create the ring buffer
