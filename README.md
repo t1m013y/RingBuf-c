@@ -5,7 +5,6 @@
 A ring buffer (FIFO) for C and C++ languages.
 
 ## Attention!
-
 `RingBuf` renamed to `RingBuf_t` since v1.6
 
 ## About
