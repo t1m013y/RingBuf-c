@@ -36,7 +36,7 @@ while (!RingBuf_Init(&ring_buffer, 128)) {}  // Better way to init the buffer, w
 ## RingBuf_Deinit()
 `int RingBuf_Deinit(RingBuf_t* buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
-Return value – `1` if initialization is successful, `0` otherwise
+Return value – `1` if deinitialization is successful, `0` otherwise
 
 Deinitialize the ring buffer. Use this function to free memory if you don't need the buffer anymore. If the buffer is already deinitialized, returns `1`. After deinitialization, the buffer can be initialized and used again.  
 **Ignores locked flag**
