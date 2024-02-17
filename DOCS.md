@@ -5,7 +5,7 @@ A ring buffer (FIFO) for C and C++ languages.
 Ring buffer is a data structure that uses a single, fixed-size buffer as if it were connected end-to-end. [\(Wikipedia\)](https://en.wikipedia.org/wiki/Circular_buffer)
 
 ## RingBuf_t
-`typedef struct { ... } RingBuf_t;`  
+`typedef struct { ... } RingBuf_t`  
 The ring buffer and type. Used to create the buffer and by library functions. Stores data about the buffer.
 
 The buffer has locked flag. It is `true` if any process is modifying buffer at the moment. If this flag is `true`, any operation that can modify the buffer won't be started and will return `0`. Some functions ignore locked flag.
