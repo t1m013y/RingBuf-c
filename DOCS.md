@@ -1,4 +1,4 @@
-# RingBuf-c v1.6 documentation
+# RingBuf-c v1.7 documentation
 
 A ring buffer (FIFO) for C and C++ languages.
 
@@ -17,7 +17,7 @@ The buffer has locked flag. It is `true` if any process is modifying buffer at t
 **Important!** Don't modify or read any element of the buffer structure manually! It can break the buffer! Use `RingBuf_OA` functions instead.
 
 ## RingBuf_Init()
-`int RingBuf_Init(RingBuf_t* buffer_h, size_t buffer_size)`  
+`int RingBuf_Init(RingBuf_t *buffer_h, size_t buffer_size)`  
 `buffer_h` – Pointer to the `RingBuf_t`  
 `buffer_size` – Size of the buffer (must be greater than `0`)  
 Return value – `1` if initialization is successful, `0` otherwise
@@ -34,7 +34,7 @@ while (!RingBuf_Init(&ring_buffer, 128)) {}  // Better way to init the buffer, w
 **Note:** Don't initialize the buffer twice. If the buffer is already initialized, you can initialize it again only after deinitialization with `RingBuf_Deinit()`.
 
 ## RingBuf_Deinit()
-`int RingBuf_Deinit(RingBuf_t* buffer_h)`  
+`int RingBuf_Deinit(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `1` if deinitialization is successful, `0` otherwise
 
@@ -50,7 +50,7 @@ RingBuf_Deinit(&ring_buffer);  // Deinitialize the buffer
 
 ## RingBuf_IsInit()
 **Warning! Deprecated.**  
-`bool RingBuf_IsInit(RingBuf_t* buffer_h)`  
+`bool RingBuf_IsInit(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `true` if the buffer is initialized, `false` if the buffer is not initialized
 
@@ -64,7 +64,7 @@ if (!RingBuf_IsInit(&ring_buffer)) {  // If the buffer is not initialized
 ```
 
 ## RingBuf_Clear()
-`int RingBuf_Clear(RingBuf_t* buffer_h)`  
+`int RingBuf_Clear(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `1` if successful, `0` otherwise
 
@@ -76,7 +76,7 @@ RingBuf_Clear(&ring_buffer);  // Clear the buffer
 ```
 
 ## RingBuf_Queue()
-`int RingBuf_Queue(RingBuf_t* buffer_h, const char data)`  
+`int RingBuf_Queue(RingBuf_t *buffer_h, const char data)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 `data` – Data to add to the buffer  
 Return value – `1` if successful, `0` otherwise
@@ -89,7 +89,7 @@ RingBuf_Queue(&ring_buffer, 'a');  // Add 'a' to the buffer
 ```
 
 ## RingBuf_QueueArr()
-`size_t RingBuf_QueueArr(RingBuf_t* buffer_h, const char * data, size_t size)`  
+`size_t RingBuf_QueueArr(RingBuf_t *buffer_h, const char * data, size_t size)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 `data` – Pointer to data array to add to the buffer  
 `size` – Size of a data array  
@@ -104,7 +104,7 @@ RingBuf_QueueArr(&ring_buffer, a, 5);  // Add "hello" to the buffer
 ```
 
 ## RingBuf_Dequeue()
-`int RingBuf_Dequeue(RingBuf_t* buffer_h, char* data)`  
+`int RingBuf_Dequeue(RingBuf_t *buffer_h, char *data)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 `data` – Pointer to a variable to save read value  
 Return value – `1` if successful, `0` otherwise
@@ -119,7 +119,7 @@ printf("%c", b);
 ```
 
 ## RingBuf_DequeueArr()
-`size_t RingBuf_DequeueArr(RingBuf_t* buffer_h, char* data, size_t size)`  
+`size_t RingBuf_DequeueArr(RingBuf_t *buffer_h, char *data, size_t size)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 `data` – Pointer to an array to save data  
 `size` – Size of the data to read  
@@ -135,7 +135,7 @@ printf("%s", c);
 ```
 
 ## RingBuf_Peek()
-`int RingBuf_Peek(RingBuf_t* buffer_h, size_t index, char* data)`  
+`int RingBuf_Peek(RingBuf_t *buffer_h, size_t index, char *data)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 `index` – Index of the element to read  
 `data` – Pointer to a variable to save read value  
@@ -152,7 +152,7 @@ printf("%c", r);
 ```
 
 ## RingBuf_GetElementsCount()
-`size_t RingBuf_GetElementsCount(RingBuf_t* buffer_h)`  
+`size_t RingBuf_GetElementsCount(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Number of elements in the buffer
 
@@ -168,7 +168,7 @@ if (RingBuf_GetElementsCount(&ring_buffer) >= 3) {  // If there are at least 3 e
 ```
 
 ## RingBuf_IsEmpty()
-`bool RingBuf_IsEmpty(RingBuf_t* buffer_h)`  
+`bool RingBuf_IsEmpty(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `true` if the buffer is empty, `false` otherwise
 
@@ -184,7 +184,7 @@ while (!RingBuf_IsEmpty(&ring_buffer)) {  // If the buffer is not empty
 ```
 
 ## RingBuf_IsFull()
-`bool RingBuf_IsFull(RingBuf_t* buffer_h)`  
+`bool RingBuf_IsFull(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `true` if the buffer is full, `false` otherwise
 
@@ -198,14 +198,14 @@ if (!RingBuf_IsFull(&ring_buffer)) {  // If the buffer is not full
 ```
 
 ## RingBuf_IsLocked()
-`bool RingBuf_IsLocked(RingBuf_t* buffer_h)`  
+`bool RingBuf_IsLocked(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `true` if the buffer is locked, `false` otherwise
 
 Checks if the buffer is locked by another process elsewhere.
 
 ## RingBuf_GetBufferSize()
-`size_t RingBuf_GetBufferSize(RingBuf_t* buffer_h)`  
+`size_t RingBuf_GetBufferSize(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Ring buffer size
 
@@ -217,7 +217,7 @@ size_t buffer_size = RingBuf_GetBufferSize(&ring_buffer);  // Get ring buffer si
 ```
 
 ## RingBuf_OA_GetBufferPointer()
-`char* RingBuf_OA_GetBufferPointer(RingBuf_t* buffer_h)`  
+`char *RingBuf_OA_GetBufferPointer(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – pointer to the buffer
 
@@ -225,21 +225,21 @@ Provides direct access to the buffer (e.g. for DMA access in STM32). Returns poi
 **Use with caution.**
 
 ## RingBuf_OA_GetReadIndex()
-`size_t RingBuf_OA_GetReadIndex(RingBuf_t* buffer_h)`  
+`size_t RingBuf_OA_GetReadIndex(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Read (tail) index of the buffer
 
 Returns read (tail) index of the ring buffer.
 
 ## RingBuf_OA_GetWriteIndex()
-`size_t RingBuf_OA_GetWriteIndex(RingBuf_t* buffer_h)`  
+`size_t RingBuf_OA_GetWriteIndex(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Write (head) index of the buffer
 
 Returns write (head) index of the ring buffer.
 
 ## RingBuf_OA_GetReadPointer()
-`char* RingBuf_OA_GetReadPointer(RingBuf_t* buffer_h)`  
+`char *RingBuf_OA_GetReadPointer(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Pointer to the read (tail) element of the buffer
 
@@ -247,7 +247,7 @@ Returns pointer to the read (tail) element of the buffer.
 **Use with caution**
 
 ## RingBuffer_OA_GetWritePointer()
-`char* RingBuffer_OA_GetWritePointer(RingBuf_t* buffer_h)`  
+`char *RingBuffer_OA_GetWritePointer(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – Pointer to the write (head) element of the buffer
 
@@ -255,7 +255,7 @@ Returns pointer to the write (head) element of the buffer.
 **Use with caution**
 
 ## RingBuf_OA_ElementQueued()
-`int RingBuf_OA_ElementQueued(RingBuf_t* buffer_h)`  
+`int RingBuf_OA_ElementQueued(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `1` if successful, `0` otherwise
 
@@ -263,7 +263,7 @@ Makes buffer act like an element is queued, but doesn't add elements to the buff
 **Use with caution**
 
 ## RingBuf_OA_ElementDequeued()
-`int RingBuf_OA_ElementDequeued(RingBuf_t* buffer_h)`  
+`int RingBuf_OA_ElementDequeued(RingBuf_t *buffer_h)`  
 `buffer_h` – Pointer to the `RingBuf_t` structure  
 Return value – `1` if successful, `0` otherwise
 
