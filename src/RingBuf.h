@@ -1,8 +1,9 @@
 /*
   RingBuf-c
-  v1.7
+  v2.0
   https://github.com/t1m013y/RingBuf-c
   By Timofey Fomin (https://github.com/t1m013y, t1m013y@gmail.com)
+  This code is licensed under MIT license
 */
 
 #ifndef INCLUDED_t1m013y_RingBuf_h
@@ -14,7 +15,11 @@ extern "C" {
 
 
 #include <stdlib.h>
-#include <stdbool.h>
+#include <string.h>
+
+#ifndef __cplusplus
+#include <stdbool.h>  // Include stdbool.h if not c++
+#endif
 
 typedef struct {
   bool _wInit;
@@ -24,46 +29,38 @@ typedef struct {
   
   size_t buffer_size;
   
-  size_t tail_index;
+  size_t head_index;
   size_t elements_count;
 } RingBuf_t;
 
-int RingBuf_Init(RingBuf_t *buffer_h, size_t buffer_size);
-int RingBuf_Deinit(RingBuf_t *buffer_h);
+short RingBuf_Init(RingBuf_t *ctx, size_t buffer_size);
+short RingBuf_Deinit(RingBuf_t *ctx);
 
-__attribute__((deprecated))
-bool RingBuf_IsInit(RingBuf_t *buffer_h);
+bool RingBuf_IsInit(RingBuf_t *ctx);
 
-int RingBuf_Clear(RingBuf_t *buffer_h);
+short RingBuf_Clear(RingBuf_t *ctx);
 
-int RingBuf_Queue(RingBuf_t *buffer_h, const char data);
-size_t RingBuf_QueueArr(RingBuf_t *buffer_h, const char  *data, size_t size);
+short RingBuf_Queue(RingBuf_t *ctx, const char data);
+short RingBuf_Queue_NoOverwrite(RingBuf_t *ctx, const char data);
+size_t RingBuf_QueueArr(RingBuf_t *ctx, const char *data, size_t size);
+size_t RingBuf_QueueArr_NoOverwrite(RingBuf_t *ctx, const char *data, size_t size);
 
-int RingBuf_Dequeue(RingBuf_t *buffer_h, char *data);
-size_t RingBuf_DequeueArr(RingBuf_t *buffer_h, char *data, size_t size);
+short RingBuf_Dequeue(RingBuf_t *ctx, char *data);
+size_t RingBuf_DequeueArr(RingBuf_t *ctx, char *data, size_t size);
 
-int RingBuf_Peek(RingBuf_t *buffer_h, size_t index, char *data);
+short RingBuf_Peek(RingBuf_t *ctx, size_t index, char *data);
+size_t RingBuf_PeekArr(RingBuf_t *ctx, size_t from_index, size_t size, char *data);
 
-size_t RingBuf_GetElementsCount(RingBuf_t *buffer_h);
-bool RingBuf_IsEmpty(RingBuf_t *buffer_h);
-bool RingBuf_IsFull(RingBuf_t *buffer_h);
+size_t RingBuf_GetElementsCount(RingBuf_t *ctx);
+bool RingBuf_IsEmpty(RingBuf_t *ctx);
+bool RingBuf_IsFull(RingBuf_t *ctx);
 
-bool RingBuf_IsLocked(RingBuf_t *buffer_h);
+bool RingBuf_IsLocked(RingBuf_t *ctx);
 
-size_t RingBuf_GetBufferSize(RingBuf_t *buffer_h);
+size_t RingBuf_GetBufferSize(RingBuf_t *ctx);
 
-char *RingBuf_OA_GetBufferPointer(RingBuf_t *buffer_h);
-size_t RingBuf_OA_GetReadIndex(RingBuf_t *buffer_h);
-size_t RingBuf_OA_GetWriteIndex(RingBuf_t *buffer_h);
-char *RingBuf_OA_GetReadPointer(RingBuf_t *buffer_h);
-char *RingBuffer_OA_GetWritePointer(RingBuf_t *buffer_h);
-int RingBuf_OA_ElementQueued(RingBuf_t *buffer_h);
-int RingBuf_OA_ElementDequeued(RingBuf_t *buffer_h);
-
-int RingBuf__Queue(RingBuf_t *buffer_h, const char data, bool _ign_lock);  // Auxiliary function, not recommended to use
-int RingBuf__Dequeue(RingBuf_t *buffer_h, char *data, bool _ign_lock);  // Auxiliary function, not recommended to use
-int RingBuf__Lock(RingBuf_t *buffer_h);  // Auxiliary function, not recommended to use
-int RingBuf__Unlock(RingBuf_t *buffer_h);  // Auxiliary function, not recommended to use
+short RingBuf__Lock(RingBuf_t *ctx);  // Auxiliary function, not for usage outside library's code
+short RingBuf__Unlock(RingBuf_t *ctx);  // Auxiliary function, not for usage outside library's code
 
 
 #ifdef __cplusplus
